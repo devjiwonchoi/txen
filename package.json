@@ -4,9 +4,11 @@
   "license": "MIT",
   "dependencies": {
     "ai": "^3.0.35",
+    "edgedb": "^1.5.4",
     "openai": "^4.39.0"
   },
   "devDependencies": {
+    "@edgedb/generate": "^0.5.3",
     "@types/node": "^20.12.7",
     "typescript": "^5.4.5"
   }
