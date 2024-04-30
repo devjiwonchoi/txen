@@ -8,16 +8,13 @@
     "resolveJsonModule": true,
     "moduleDetection": "force",
     "isolatedModules": true,
-    // TODO: https://github.com/vercel/vercel/issues/11516
-    // "verbatimModuleSyntax": true,
+    "verbatimModuleSyntax": true,
     // Enable strict type checking so you can catch bugs early
     "strict": true,
     "noUncheckedIndexedAccess": true,
     "noImplicitOverride": true,
     // We are not transpiling, so preserve our source code and do not emit files
-    // TODO: https://github.com/vercel/vercel/issues/11516
-    // "module": "preserve",
-    "module": "nodenext",
+    "module": "preserve",
     "noEmit": true,
     "lib": [
       "es2022"

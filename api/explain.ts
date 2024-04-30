@@ -6,7 +6,7 @@ export const dynamic = 'force-dynamic'
 
 export async function POST(req: Request) {
   // Extract the `prompt` from the body of the request
-  const { messages }: ExplainParam = await req.json()
+  const { messages } = (await req.json()) as ExplainParam
 
   // Ask OpenAI for a streaming chat completion given the prompt
   const response = await streamGPTResponse(messages)
