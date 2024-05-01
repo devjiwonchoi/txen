@@ -11,6 +11,9 @@ dependencies:
   ai:
     specifier: ^3.0.35
     version: 3.0.35(react@18.3.1)(solid-js@1.8.17)(svelte@4.2.15)(vue@3.4.26)(zod@3.23.5)
+  common-tags:
+    specifier: ^1.8.2
+    version: 1.8.2
   edgedb:
     specifier: ^1.5.4
     version: 1.5.4
@@ -22,6 +25,9 @@ devDependencies:
   '@edgedb/generate':
     specifier: ^0.5.3
     version: 0.5.3(edgedb@1.5.4)
+  '@types/common-tags':
+    specifier: ^1.8.4
+    version: 1.8.4
   '@types/node':
     specifier: ^20.12.7
     version: 20.12.7
@@ -484,6 +490,10 @@ packages:
 
   /@tsconfig/node16@1.0.4:
     resolution: {integrity: sha512-vxhUy4J8lyeyinH7Azl1pdd43GJhZH/tP2weN8TntQblOY+A0XbT8DJk1/oCPuOOyg/Ja757rG0CgHcWC8OfMA==}
+    dev: true
+
+  /@types/common-tags@1.8.4:
+    resolution: {integrity: sha512-S+1hLDJPjWNDhcGxsxEbepzaxWqURP/o+3cP4aa2w7yBXgdcmKGQtZzP8JbyfOd0m+33nh+8+kvxYE2UJtBDkg==}
     dev: true
 
   /@types/diff-match-patch@1.0.36:
@@ -1047,6 +1057,11 @@ packages:
     engines: {node: '>= 0.8'}
     dependencies:
       delayed-stream: 1.0.0
+    dev: false
+
+  /common-tags@1.8.2:
+    resolution: {integrity: sha512-gk/Z852D2Wtb//0I+kRFNKKE9dIIVirjoqPoA1wJU+XePVXZfGeBpk45+A1rKO4Q43prqWBNY/MiIeRLbPWUaA==}
+    engines: {node: '>=4.0.0'}
     dev: false
 
   /concat-map@0.0.1:
