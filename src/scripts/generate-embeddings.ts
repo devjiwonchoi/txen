@@ -41,6 +41,20 @@ async function walk(dir: string): Promise<string[]> {
   ).flat()
 }
 
+function sectionizeContentByHeadings(content: string): string[] {
+  const headings = content.match(/^#+\s.+/gm)
+  if (!headings) return [content]
+  const sections: string[] = []
+  let start = 0
+  for (const heading of headings) {
+    const index = content.indexOf(heading, start)
+    sections.push(content.slice(start, index))
+    start = index
+  }
+  sections.push(content.slice(start))
+  return sections
+}
+
 async function prepareSectionsData(sectionPaths: string[]): Promise<Section[]> {
   const contents: string[] = []
   const sections: Section[] = []
@@ -49,13 +63,17 @@ async function prepareSectionsData(sectionPaths: string[]): Promise<Section[]> {
     const content = await readFile(path, 'utf8')
     // OpenAI recommends replacing newlines with spaces for best results
     // when generating embeddings
-    const contentTrimmed = content.replace(/\n/g, ' ')
-    contents.push(contentTrimmed)
-    sections.push({
-      content,
-      tokens: encode(content).length,
-      embedding: [],
-    })
+    const sectionizedContents = sectionizeContentByHeadings(content)
+    for (const section of sectionizedContents) {
+      if (!section.length) continue
+      const contentTrimmed = section.replace(/\n/g, ' ')
+      contents.push(contentTrimmed)
+      sections.push({
+        content: section,
+        tokens: encode(section).length,
+        embedding: [],
+      })
+    }
   }
 
   const embeddingResponse = await openai.embeddings.create({
