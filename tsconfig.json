@@ -26,9 +26,7 @@
   },
   // Include the necessary files for your project
   "include": [
-    "api/**/*.ts",
-    "scripts/**/*.ts",
-    "src/**/*.ts",
+    "**/*.ts",
   ],
   "exclude": [
     "node_modules"
