@@ -8,7 +8,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "init-edgeql": "@edgedb/generate edgeql-js",
+    "init-edgeql": "npx @edgedb/generate edgeql-js",
     "test-embed": "NODE_ENV=test pnpm embed",
     "embed": "dotenv -e .env.local -- tsx ./src/scripts/generate-embeddings.ts"
   },
@@ -19,12 +19,11 @@
     "openai": "^4.40.0"
   },
   "devDependencies": {
-    "common-tags": "^1.8.2",
-    "@edgedb/generate": "^0.5.3",
     "@types/common-tags": "^1.8.4",
     "@types/node": "^20.12.7",
     "@types/react": "^18.3.1",
     "@types/react-dom": "^18.3.0",
+    "common-tags": "^1.8.2",
     "dotenv-cli": "^7.4.1",
     "eslint": "^8.57.0",
     "eslint-config-next": "14.2.3",
