@@ -7,26 +7,22 @@ import { initOpenAI } from '@/utils/openai'
 
 const openai = initOpenAI()
 
-interface Section {
+type Section = {
   id?: string
   tokens: number
   content: string
   embedding: number[]
 }
 
-async function walk(dir: string): Promise<string[]> {
+async function getEntries(dir: string): Promise<string[]> {
   const entries = await readdir(dir, { withFileTypes: true })
-
-  return (
-    await Promise.all(
-      entries.map((entry) => {
-        const path = join(dir, entry.name)
-        if (entry.isFile()) return [path]
-        if (entry.isDirectory()) return walk(path)
-        return []
-      })
-    )
-  ).flat()
+  const entryJobs = entries.map((entry) => {
+    const entryPath = join(dir, entry.name)
+    if (entry.isFile()) return [entryPath]
+    if (entry.isDirectory()) return getEntries(entryPath)
+    return []
+  })
+  return (await Promise.all(entryJobs)).flat().filter(Boolean)
 }
 
 function sectionizeContentByHeadings(content: string): string[] {
@@ -43,12 +39,12 @@ function sectionizeContentByHeadings(content: string): string[] {
   return sections
 }
 
-async function prepareSectionsData(sectionPaths: string[]): Promise<Section[]> {
+async function getSections(entries: string[]): Promise<Section[]> {
   const contents: string[] = []
   const sections: Section[] = []
 
-  for (const path of sectionPaths) {
-    const content = await readFile(path, 'utf8')
+  for (const entry of entries) {
+    const content = await readFile(entry, 'utf8')
     // OpenAI recommends replacing newlines with spaces for best results
     // when generating embeddings
     const sectionizedContents = sectionizeContentByHeadings(content)
@@ -80,11 +76,9 @@ async function prepareSectionsData(sectionPaths: string[]): Promise<Section[]> {
 
 async function storeEmbeddings() {
   const edgedb = createEdgeDB()
-  const sectionPaths = await walk('docs')
-
-  console.log(`Discovered ${sectionPaths.length} sections`)
-
-  const sections = await prepareSectionsData(sectionPaths)
+  const entries = await getEntries('docs')
+  const sections = await getSections(entries)
+  console.log(`Discovered ${sections.length} sections`)
 
   // Delete old data from the DB.
   await edgeql.delete(edgeql.Section).run(edgedb)
@@ -104,6 +98,8 @@ async function storeEmbeddings() {
   console.log('Embedding generation complete')
 }
 
-;(async function main() {
+async function main() {
   await storeEmbeddings()
-})()
+}
+
+main().catch((err) => console.error(err))
