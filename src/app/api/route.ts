@@ -4,8 +4,6 @@ import { createHttpClient } from 'edgedb'
 import { errors } from '@/utils/constants'
 import { initOpenAI } from '@/utils/openai'
 
-export const runtime = 'edge'
-
 const openai = initOpenAI()
 const edgedbClient = createHttpClient()
 
