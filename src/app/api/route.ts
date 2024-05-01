@@ -1,13 +1,13 @@
+import edgeql from 'dbschema/edgeql-js'
 import { stripIndents, oneLineTrim } from 'common-tags'
-import * as edgedb from 'edgedb'
-import e from 'dbschema/edgeql-js'
+import { createHttpClient } from 'edgedb'
 import { errors } from '@/utils/constants'
 import { initOpenAI } from '@/utils/openai'
 
 export const dynamic = 'force-dynamic'
 
 const openai = initOpenAI()
-const edgedbClient = edgedb.createHttpClient()
+const edgedbClient = createHttpClient()
 
 export async function POST(req: Request) {
   try {
@@ -58,16 +58,16 @@ async function getEmbedding(query: string) {
   return embeddingResponse.data[0]?.embedding
 }
 
-const getSectionsQuery = e.params(
+const getSectionsQuery = edgeql.params(
   {
-    target: e.OpenAIEmbedding,
-    matchThreshold: e.float64,
-    matchCount: e.int16,
-    minContentLength: e.int16,
+    target: edgeql.OpenAIEmbedding,
+    matchThreshold: edgeql.float64,
+    matchCount: edgeql.int16,
+    minContentLength: edgeql.int16,
   },
   (params) => {
-    return e.select(e.Section, (section) => {
-      const dist = e.ext.pgvector.cosine_distance(
+    return edgeql.select(edgeql.Section, (section) => {
+      const dist = edgeql.ext.pgvector.cosine_distance(
         section.embedding,
         params.target
       )
@@ -75,14 +75,14 @@ const getSectionsQuery = e.params(
         content: true,
         tokens: true,
         dist,
-        filter: e.op(
-          e.op(e.len(section.content), '>', params.minContentLength),
+        filter: edgeql.op(
+          edgeql.op(edgeql.len(section.content), '>', params.minContentLength),
           'and',
-          e.op(dist, '<', params.matchThreshold)
+          edgeql.op(dist, '<', params.matchThreshold)
         ),
         order_by: {
           expression: dist,
-          empty: e.EMPTY_LAST,
+          empty: edgeql.EMPTY_LAST,
         },
         limit: params.matchCount,
       }
