@@ -1,8 +1,8 @@
 import { stripIndents, oneLineTrim } from 'common-tags'
 import * as edgedb from 'edgedb'
-import e from '../../dbschema/edgeql-js'
-import { errors } from '../../api/_constants'
-import { initOpenAI } from '../../api/_openai'
+import e from 'dbschema/edgeql-js'
+import { errors } from '@/utils/constants'
+import { initOpenAI } from '@/utils/openai'
 
 export const dynamic = 'force-dynamic'
 

@@ -2,7 +2,7 @@
 
 import { useState, useRef } from 'react'
 import { SSE } from 'sse.js'
-import { errors } from '../api/_constants'
+import { errors } from '@/utils/constants'
 
 export default function Home() {
   const eventSourceRef = useRef<SSE>()
