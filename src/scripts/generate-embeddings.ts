@@ -1,9 +1,10 @@
-import fs from 'fs/promises'
 import dotenv from 'dotenv'
-import OpenAI from 'openai'
 import * as edgedb from 'edgedb'
 import e from '../../dbschema/edgeql-js'
+import { join } from 'path'
+import { readdir, readFile } from 'fs/promises'
 import { encode } from 'gpt-tokenizer'
+import { OpenAI } from 'openai'
 
 dotenv.config()
 
@@ -16,7 +17,7 @@ function initOpenAIClient() {
   return new OpenAI()
 }
 
-export const openai = initOpenAIClient()
+const openai = initOpenAIClient()
 
 interface Section {
   id?: string
@@ -26,12 +27,12 @@ interface Section {
 }
 
 async function walk(dir: string): Promise<string[]> {
-  const entries = await fs.readdir(dir, { withFileTypes: true })
+  const entries = await readdir(dir, { withFileTypes: true })
 
   return (
     await Promise.all(
       entries.map((entry) => {
-        const { path } = entry
+        const path = join(dir, entry.name)
         if (entry.isFile()) return [path]
         if (entry.isDirectory()) return walk(path)
         return []
@@ -45,7 +46,7 @@ async function prepareSectionsData(sectionPaths: string[]): Promise<Section[]> {
   const sections: Section[] = []
 
   for (const path of sectionPaths) {
-    const content = await fs.readFile(path, 'utf8')
+    const content = await readFile(path, 'utf8')
     // OpenAI recommends replacing newlines with spaces for best results
     // when generating embeddings
     const contentTrimmed = content.replace(/\n/g, ' ')
@@ -71,10 +72,8 @@ async function prepareSectionsData(sectionPaths: string[]): Promise<Section[]> {
   return sections
 }
 
-;(async function storeEmbeddings() {
+async function storeEmbeddings() {
   const client = edgedb.createClient()
-
-  console.log('created client')
 
   const sectionPaths = await walk('docs')
 
@@ -98,4 +97,8 @@ async function prepareSectionsData(sectionPaths: string[]): Promise<Section[]> {
 
   await query.run(client, { sections })
   console.log('Embedding generation complete')
+}
+
+;(async function main() {
+  await storeEmbeddings()
 })()
