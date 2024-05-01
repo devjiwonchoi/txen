@@ -1,8 +1,14 @@
 {
   "name": "txen",
   "version": "0.0.0",
+  "type": "module",
   "license": "MIT",
+  "scripts": {
+    "dev": "vc dev",
+    "embed": "tsx ./src/scripts/generate-embeddings.ts"
+  },
   "dependencies": {
+    "@edgedb/ai": "0.1.0-alpha.1",
     "ai": "^3.0.35",
     "edgedb": "^1.5.4",
     "openai": "^4.39.0"
@@ -10,6 +16,15 @@
   "devDependencies": {
     "@edgedb/generate": "^0.5.3",
     "@types/node": "^20.12.7",
-    "typescript": "^5.4.5"
-  }
+    "dotenv": "^16.4.5",
+    "gpt-tokenizer": "^2.1.2",
+    "tsx": "^4.8.1",
+    "typescript": "^5.4.5",
+    "vercel": "^34.1.5"
+  },
+  "engines": {
+    "node": ">=20.12.0",
+    "pnpm": "8.15.7"
+  },
+  "packageManager": "pnpm@8.15.7"
 }
