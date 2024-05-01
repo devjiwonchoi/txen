@@ -5,14 +5,14 @@ export function setAuthOptions(): NextAuthOptions {
   if (!process.env.OAUTH_GITHUB_CLIENT_ID) {
     throw new Error('OAUTH_GITHUB_CLIENT_ID is not set')
   }
-  if (!process.env.OAUTH_GITHUB_CLIENT_SECRETS) {
-    throw new Error('OAUTH_GITHUB_CLIENT_SECRETS is not set')
+  if (!process.env.OAUTH_GITHUB_CLIENT_SECRET) {
+    throw new Error('OAUTH_GITHUB_CLIENT_SECRET is not set')
   }
   return {
     providers: [
       GithubProvider({
         clientId: process.env.OAUTH_GITHUB_CLIENT_ID,
-        clientSecret: process.env.OAUTH_GITHUB_CLIENT_SECRETS,
+        clientSecret: process.env.OAUTH_GITHUB_CLIENT_SECRET,
       }),
     ],
     callbacks: {
