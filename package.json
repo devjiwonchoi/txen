@@ -4,24 +4,36 @@
   "type": "module",
   "license": "MIT",
   "scripts": {
-    "dev": "vc dev",
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
     "embed": "tsx ./scripts/generate-embeddings.ts"
   },
   "dependencies": {
     "@edgedb/ai": "0.1.0-alpha.1",
-    "ai": "^3.0.35",
+    "ai": "^3.1.0",
     "common-tags": "^1.8.2",
     "edgedb": "^1.5.4",
-    "openai": "^4.39.0"
+    "openai": "^4.40.0"
   },
   "devDependencies": {
     "@edgedb/generate": "^0.5.3",
     "@types/common-tags": "^1.8.4",
     "@types/node": "^20.12.7",
+    "@types/react": "^18.3.1",
+    "@types/react-dom": "^18.3.0",
     "dotenv": "^16.4.5",
+    "eslint": "^8.57.0",
+    "eslint-config-next": "14.2.3",
     "gpt-tokenizer": "^2.1.2",
-    "tsx": "^4.8.1",
+    "next": "14.2.3",
+    "postcss": "^8.4.38",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "tailwindcss": "^3.4.3",
+    "tsx": "^4.8.2",
     "typescript": "^5.4.5",
-    "vercel": "^34.1.5"
+    "vercel": "^34.1.7"
   }
 }
