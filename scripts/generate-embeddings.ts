@@ -1,11 +1,9 @@
-import edgeql from 'dbschema/edgeql-js'
+import e from 'dbschema/edgeql-js'
 import { join } from 'path'
 import { readdir, readFile } from 'fs/promises'
 import { createClient as createEdgeDB } from 'edgedb'
 import { encode } from 'gpt-tokenizer'
 import { initOpenAI } from '@/utils/openai'
-
-const openai = initOpenAI()
 
 type Section = {
   id?: string
@@ -14,18 +12,9 @@ type Section = {
   embedding: number[]
 }
 
-async function getEntries(dir: string): Promise<string[]> {
-  const entries = await readdir(dir, { withFileTypes: true })
-  const entryJobs = entries.map((entry) => {
-    const entryPath = join(dir, entry.name)
-    if (entry.isFile()) return [entryPath]
-    if (entry.isDirectory()) return getEntries(entryPath)
-    return []
-  })
-  return (await Promise.all(entryJobs)).flat().filter(Boolean)
-}
+const openai = initOpenAI()
 
-function sectionizeContentByHeadings(content: string): string[] {
+function splitContentByHeadings(content: string): string[] {
   const headings = content.match(/^#+\s.+/gm)
   if (!headings) return [content]
   const sections: string[] = []
@@ -36,7 +25,9 @@ function sectionizeContentByHeadings(content: string): string[] {
     start = index
   }
   sections.push(content.slice(start))
-  return sections
+  // OpenAI recommends replacing newlines with spaces for best results
+  // when generating embeddings
+  return sections.map((section) => section.replace(/\n/g, ' ')).filter(Boolean)
 }
 
 async function getSections(entries: string[]): Promise<Section[]> {
@@ -45,20 +36,18 @@ async function getSections(entries: string[]): Promise<Section[]> {
 
   for (const entry of entries) {
     const content = await readFile(entry, 'utf8')
-    // OpenAI recommends replacing newlines with spaces for best results
-    // when generating embeddings
-    const sectionizedContents = sectionizeContentByHeadings(content)
-    for (const section of sectionizedContents) {
-      if (!section.length) continue
-      const contentTrimmed = section.replace(/\n/g, ' ')
-      contents.push(contentTrimmed)
-      sections.push({
-        content: section,
-        tokens: encode(section).length,
-        embedding: [],
-      })
-    }
+    contents.push(...splitContentByHeadings(content))
   }
+
+  for (const content of contents) {
+    sections.push({
+      content,
+      tokens: encode(content).length,
+      embedding: [],
+    })
+  }
+
+  console.log(`Discovered ${sections.length} sections`)
 
   const embeddingResponse = await openai.embeddings.create({
     model: 'text-embedding-ada-002',
@@ -74,22 +63,35 @@ async function getSections(entries: string[]): Promise<Section[]> {
   return sections
 }
 
+async function getEntries(dir: string): Promise<string[]> {
+  const entries = await readdir(dir, { withFileTypes: true })
+  const entryJobs = entries.map((entry) => {
+    const entryPath = join(dir, entry.name)
+    if (entry.isFile()) return [entryPath]
+    if (entry.isDirectory()) return getEntries(entryPath)
+    return []
+  })
+  return (await Promise.all(entryJobs)).flat().filter(Boolean)
+}
+
 async function storeEmbeddings() {
   const edgedb = createEdgeDB()
   const entries = await getEntries('docs')
+  console.log(`Discovered ${entries.length} entries`)
   const sections = await getSections(entries)
-  console.log(`Discovered ${sections.length} sections`)
 
   // Delete old data from the DB.
-  await edgeql.delete(edgeql.Section).run(edgedb)
+  // TODO: do not delete all data, use checksum
+  await e.delete(e.Section).run(edgedb)
+  console.log('Deleted old data')
 
   // Bulk-insert all data into EdgeDB database.
-  const query = edgeql.params({ sections: edgeql.json }, ({ sections }) => {
-    return edgeql.for(edgeql.json_array_unpack(sections), (section) => {
-      return edgeql.insert(edgeql.Section, {
-        content: edgeql.cast(edgeql.str, section.content!),
-        tokens: edgeql.cast(edgeql.int16, section.tokens!),
-        embedding: edgeql.cast(edgeql.OpenAIEmbedding, section.embedding!),
+  const query = e.params({ sections: e.json }, ({ sections }) => {
+    return e.for(e.json_array_unpack(sections), (section) => {
+      return e.insert(e.Section, {
+        content: e.cast(e.str, section.content!),
+        tokens: e.cast(e.int16, section.tokens!),
+        embedding: e.cast(e.OpenAIEmbedding, section.embedding!),
       })
     })
   })
@@ -99,6 +101,7 @@ async function storeEmbeddings() {
 }
 
 async function main() {
+  console.log('Generating embeddings')
   await storeEmbeddings()
 }
 
