@@ -1,32 +1,37 @@
 {
   "compilerOptions": {
-    // Base Options recommended for all projects
-    "esModuleInterop": true,
-    "skipLibCheck": true,
-    "target": "es2022",
-    "allowJs": true,
-    "resolveJsonModule": true,
-    "moduleDetection": "force",
-    "isolatedModules": true,
-    // TODO: https://github.com/vercel/vercel/issues/11516
-    // "verbatimModuleSyntax": true,
-    // Enable strict type checking so you can catch bugs early
-    "strict": true,
-    "noUncheckedIndexedAccess": true,
-    "noImplicitOverride": true,
-    // We are not transpiling, so preserve our source code and do not emit files
-    // TODO: https://github.com/vercel/vercel/issues/11516
-    // "module": "preserve",
-    "module": "ESNext", // alternate above
-    "moduleResolution": "node", // alternate above
-    "noEmit": true,
     "lib": [
-      "es2022"
-    ]
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "noEmit": true,
+    "esModuleInterop": true,
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "jsx": "preserve",
+    "incremental": true,
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
+    "paths": {
+      "@/*": [
+        "./*"
+      ]
+    }
   },
-  // Include the necessary files for your project
   "include": [
+    "next-env.d.ts",
     "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts"
   ],
   "exclude": [
     "node_modules"
