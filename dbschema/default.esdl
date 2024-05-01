@@ -5,13 +5,13 @@ module default {
     ext::pgvector::vector<1536>;
 
   type Section {
-    required path: str {
+    path: str {
       constraint exclusive;
     }
-    required checksum: str;
-    required content: str;
-    required tokens: int16;
-    required embedding: OpenAIEmbedding;
+    checksum: str;
+    content: str;
+    tokens: int16;
+    embedding: OpenAIEmbedding;
 
     index ext::pgvector::ivfflat_cosine(lists := 1)
       on (.embedding);
