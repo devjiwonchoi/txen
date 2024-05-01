@@ -1,17 +1,9 @@
-import * as edgedb from 'edgedb'
-import OpenAI from 'openai'
-import e from '../dbschema/edgeql-js'
+import edgeql from 'dbschema/edgeql-js'
 import { join } from 'path'
 import { readdir, readFile } from 'fs/promises'
+import { createClient as createEdgeDB } from 'edgedb'
 import { encode } from 'gpt-tokenizer'
-
-function initOpenAI() {
-  if (!process.env.OPENAI_API_KEY) {
-    throw new Error('OPENAI_API_KEY is not set')
-  }
-  // reads OPENAI_API_KEY by default
-  return new OpenAI()
-}
+import { initOpenAI } from '@/utils/openai'
 
 const openai = initOpenAI()
 
@@ -87,8 +79,7 @@ async function prepareSectionsData(sectionPaths: string[]): Promise<Section[]> {
 }
 
 async function storeEmbeddings() {
-  const client = edgedb.createClient()
-
+  const edgedb = createEdgeDB()
   const sectionPaths = await walk('docs')
 
   console.log(`Discovered ${sectionPaths.length} sections`)
@@ -96,20 +87,20 @@ async function storeEmbeddings() {
   const sections = await prepareSectionsData(sectionPaths)
 
   // Delete old data from the DB.
-  await e.delete(e.Section).run(client)
+  await edgeql.delete(edgeql.Section).run(edgedb)
 
   // Bulk-insert all data into EdgeDB database.
-  const query = e.params({ sections: e.json }, ({ sections }) => {
-    return e.for(e.json_array_unpack(sections), (section) => {
-      return e.insert(e.Section, {
-        content: e.cast(e.str, section.content!),
-        tokens: e.cast(e.int16, section.tokens!),
-        embedding: e.cast(e.OpenAIEmbedding, section.embedding!),
+  const query = edgeql.params({ sections: edgeql.json }, ({ sections }) => {
+    return edgeql.for(edgeql.json_array_unpack(sections), (section) => {
+      return edgeql.insert(edgeql.Section, {
+        content: edgeql.cast(edgeql.str, section.content!),
+        tokens: edgeql.cast(edgeql.int16, section.tokens!),
+        embedding: edgeql.cast(edgeql.OpenAIEmbedding, section.embedding!),
       })
     })
   })
 
-  await query.run(client, { sections })
+  await query.run(edgedb, { sections })
   console.log('Embedding generation complete')
 }
 
