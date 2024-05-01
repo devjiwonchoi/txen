@@ -1,4 +1,4 @@
-import edgeql from '../../../dbschema/edgeql-js'
+import edgeql from 'dbschema/edgeql-js'
 import { stripIndents, oneLineTrim } from 'common-tags'
 import { createHttpClient } from 'edgedb'
 import { errors } from '@/utils/constants'
