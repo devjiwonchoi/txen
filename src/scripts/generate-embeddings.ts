@@ -48,6 +48,10 @@ async function getSections(entries: string[]): Promise<Section[]> {
   }
 
   console.log(`Discovered ${sections.length} sections`)
+  if (process.env.NODE_ENV === 'test') {
+    console.log('Exiting early in test environment')
+    process.exit(0)
+  }
 
   const embeddingResponse = await openai.embeddings.create({
     model: 'text-embedding-ada-002',

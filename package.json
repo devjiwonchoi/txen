@@ -8,7 +8,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "embed": "dotenv -e .env.local -- tsx ./scripts/generate-embeddings.ts"
+    "test-embed": "NODE_ENV=test pnpm embed",
+    "embed": "dotenv -e .env.local -- tsx ./src/scripts/generate-embeddings.ts"
   },
   "dependencies": {
     "@edgedb/ai": "0.1.0-alpha.1",
