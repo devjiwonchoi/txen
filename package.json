@@ -8,7 +8,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "embed": "dotenv -e .env.local -- tsx ./scripts/generate-embeddings.ts"
+    "embed": "dotenv -e .env.local -- tsx ./scripts/generate-embeddings.ts",
+    "generateDB": "npx @edgedb/generate@latest edgeql-js",
+    "postinstall": "edgedb migrate && pnpm generateDB && pnpm embed"
   },
   "dependencies": {
     "@edgedb/ai": "0.1.0-alpha.1",
