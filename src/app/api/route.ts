@@ -1,15 +1,14 @@
 import edgeql from 'dbschema/edgeql-js'
 import { stripIndents, oneLineTrim } from 'common-tags'
 import { createHttpClient } from 'edgedb'
+import { auth } from '@/utils/auth'
 import { errors } from '@/utils/constants'
 import { initOpenAI } from '@/utils/openai'
-
-export const runtime = 'edge'
 
 const openai = initOpenAI()
 const edgedbClient = createHttpClient()
 
-export async function POST(req: Request) {
+export const POST = auth(async function POST(req: Request) {
   try {
     const { query } = (await req.json()) as { query: string }
     const sanitizedQuery = query.trim()
@@ -41,7 +40,7 @@ export async function POST(req: Request) {
       headers: { 'Content-Type': 'application/json' },
     })
   }
-}
+})
 
 async function isQueryFlagged(query: string) {
   const moderation = await openai.moderations.create({
