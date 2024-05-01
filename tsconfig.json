@@ -17,7 +17,8 @@
     // We are not transpiling, so preserve our source code and do not emit files
     // TODO: https://github.com/vercel/vercel/issues/11516
     // "module": "preserve",
-    "module": "nodenext",
+    "module": "ESNext", // alternate above
+    "moduleResolution": "node", // alternate above
     "noEmit": true,
     "lib": [
       "es2022"

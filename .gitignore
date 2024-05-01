@@ -1,4 +1,6 @@
-node_modules/
+.vercel/
 dist/
+node_modules/
 .env*
-.vercel
+
+dbschema/edgeql-js
