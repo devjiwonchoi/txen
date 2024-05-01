@@ -1,12 +1,17 @@
 import * as edgedb from 'edgedb'
+import OpenAI from 'openai'
 import e from '../dbschema/edgeql-js'
-import dotenv from 'dotenv'
 import { join } from 'path'
 import { readdir, readFile } from 'fs/promises'
 import { encode } from 'gpt-tokenizer'
-import { initOpenAI } from '../api/_openai'
 
-dotenv.config()
+function initOpenAI() {
+  if (!process.env.OPENAI_API_KEY) {
+    throw new Error('OPENAI_API_KEY is not set')
+  }
+  // reads OPENAI_API_KEY by default
+  return new OpenAI()
+}
 
 const openai = initOpenAI()
 

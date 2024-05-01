@@ -9,10 +9,9 @@ export const dynamic = 'force-dynamic'
 const openai = initOpenAI()
 const edgedbClient = edgedb.createHttpClient()
 
-export async function GET(req: Request) {
+export async function POST(req: Request) {
   try {
-    // const { query } = (await req.json()) as { query: string }
-    const query = `what is generateStaticParams?`
+    const { query } = (await req.json()) as { query: string }
     const sanitizedQuery = query.trim()
 
     const flagged = await isQueryFlagged(query)
