@@ -12,13 +12,10 @@
     "test-embed": "NODE_ENV=test pnpm embed",
     "embed": "dotenv -e .env.local -- tsx ./src/scripts/generate-embeddings.ts"
   },
-  "dependencies": {
-    "@edgedb/ai": "0.1.0-alpha.1",
+  "devDependencies": {
     "ai": "^3.1.0",
     "edgedb": "^1.5.4",
-    "openai": "^4.40.0"
-  },
-  "devDependencies": {
+    "openai": "^4.40.0",
     "@types/common-tags": "^1.8.4",
     "@types/node": "^20.12.7",
     "@types/react": "^18.3.1",
