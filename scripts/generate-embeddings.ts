@@ -1,43 +1,20 @@
-import * as edgedb from 'edgedb'
-import OpenAI from 'openai'
-import e from '../dbschema/edgeql-js'
+import e from 'dbschema/edgeql-js'
 import { join } from 'path'
 import { readdir, readFile } from 'fs/promises'
+import { createClient as createEdgeDB } from 'edgedb'
 import { encode } from 'gpt-tokenizer'
+import { initOpenAI } from '@/utils/openai'
 
-function initOpenAI() {
-  if (!process.env.OPENAI_API_KEY) {
-    throw new Error('OPENAI_API_KEY is not set')
-  }
-  // reads OPENAI_API_KEY by default
-  return new OpenAI()
-}
-
-const openai = initOpenAI()
-
-interface Section {
+type Section = {
   id?: string
   tokens: number
   content: string
   embedding: number[]
 }
 
-async function walk(dir: string): Promise<string[]> {
-  const entries = await readdir(dir, { withFileTypes: true })
+const openai = initOpenAI()
 
-  return (
-    await Promise.all(
-      entries.map((entry) => {
-        const path = join(dir, entry.name)
-        if (entry.isFile()) return [path]
-        if (entry.isDirectory()) return walk(path)
-        return []
-      })
-    )
-  ).flat()
-}
-
-function sectionizeContentByHeadings(content: string): string[] {
+function splitContentByHeadings(content: string): string[] {
   const headings = content.match(/^#+\s.+/gm)
   if (!headings) return [content]
   const sections: string[] = []
@@ -48,29 +25,29 @@ function sectionizeContentByHeadings(content: string): string[] {
     start = index
   }
   sections.push(content.slice(start))
-  return sections
+  // OpenAI recommends replacing newlines with spaces for best results
+  // when generating embeddings
+  return sections.map((section) => section.replace(/\n/g, ' ')).filter(Boolean)
 }
 
-async function prepareSectionsData(sectionPaths: string[]): Promise<Section[]> {
+async function getSections(entries: string[]): Promise<Section[]> {
   const contents: string[] = []
   const sections: Section[] = []
 
-  for (const path of sectionPaths) {
-    const content = await readFile(path, 'utf8')
-    // OpenAI recommends replacing newlines with spaces for best results
-    // when generating embeddings
-    const sectionizedContents = sectionizeContentByHeadings(content)
-    for (const section of sectionizedContents) {
-      if (!section.length) continue
-      const contentTrimmed = section.replace(/\n/g, ' ')
-      contents.push(contentTrimmed)
-      sections.push({
-        content: section,
-        tokens: encode(section).length,
-        embedding: [],
-      })
-    }
+  for (const entry of entries) {
+    const content = await readFile(entry, 'utf8')
+    contents.push(...splitContentByHeadings(content))
   }
+
+  for (const content of contents) {
+    sections.push({
+      content,
+      tokens: encode(content).length,
+      embedding: [],
+    })
+  }
+
+  console.log(`Discovered ${sections.length} sections`)
 
   const embeddingResponse = await openai.embeddings.create({
     model: 'text-embedding-ada-002',
@@ -86,17 +63,27 @@ async function prepareSectionsData(sectionPaths: string[]): Promise<Section[]> {
   return sections
 }
 
+async function getEntries(dir: string): Promise<string[]> {
+  const entries = await readdir(dir, { withFileTypes: true })
+  const entryJobs = entries.map((entry) => {
+    const entryPath = join(dir, entry.name)
+    if (entry.isFile()) return [entryPath]
+    if (entry.isDirectory()) return getEntries(entryPath)
+    return []
+  })
+  return (await Promise.all(entryJobs)).flat().filter(Boolean)
+}
+
 async function storeEmbeddings() {
-  const client = edgedb.createClient()
-
-  const sectionPaths = await walk('docs')
-
-  console.log(`Discovered ${sectionPaths.length} sections`)
-
-  const sections = await prepareSectionsData(sectionPaths)
+  const edgedb = createEdgeDB()
+  const entries = await getEntries('docs')
+  console.log(`Discovered ${entries.length} entries`)
+  const sections = await getSections(entries)
 
   // Delete old data from the DB.
-  await e.delete(e.Section).run(client)
+  // TODO: do not delete all data, use checksum
+  await e.delete(e.Section).run(edgedb)
+  console.log('Deleted old data')
 
   // Bulk-insert all data into EdgeDB database.
   const query = e.params({ sections: e.json }, ({ sections }) => {
@@ -109,10 +96,13 @@ async function storeEmbeddings() {
     })
   })
 
-  await query.run(client, { sections })
+  await query.run(edgedb, { sections })
   console.log('Embedding generation complete')
 }
 
-;(async function main() {
+async function main() {
+  console.log('Generating embeddings')
   await storeEmbeddings()
-})()
+}
+
+main().catch((err) => console.error(err))
