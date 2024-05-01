@@ -119,8 +119,8 @@ async function getContext(embedding: number[]) {
 
 function createFullPrompt(query: string, context: string) {
   const systemMessage = `
-        As an enthusiastic EdgeDB expert keen to assist,
-        respond to questions referencing the given EdgeDB
+        As an enthusiastic Next.js expert keen to assist,
+        respond to questions referencing the given Next.js
         sections.
 
         If unable to help based on documentation, respond
@@ -129,7 +129,7 @@ function createFullPrompt(query: string, context: string) {
   return stripIndents`
         ${oneLineTrim`${systemMessage}`}
 
-        EdgeDB sections: """
+        Next.js sections: """
         ${context}
         """
 
