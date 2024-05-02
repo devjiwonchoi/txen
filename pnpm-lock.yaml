@@ -4,11 +4,6 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
-dependencies:
-  txen:
-    specifier: file:txen-0.0.0.tgz
-    version: file:txen-0.0.0.tgz
-
 devDependencies:
   '@types/common-tags':
     specifier: ^1.8.4
@@ -5865,10 +5860,3 @@ packages:
   /zod@3.23.5:
     resolution: {integrity: sha512-fkwiq0VIQTksNNA131rDOsVJcns0pfVUjHzLrNBiF/O/Xxb5lQyEXkhZWcJ7npWsYlvs+h0jFWXXy4X46Em1JA==}
     dev: true
-
-  file:txen-0.0.0.tgz:
-    resolution: {integrity: sha512-OQrTQpclY35hCmH+6WQrBGL6XS9cClR/COOafyYZCe1mUXuXamjif6ij3Dhj1U9h1x2Q7OToYDwSlRULW5Ch+w==, tarball: file:txen-0.0.0.tgz}
-    name: txen
-    version: 0.0.0
-    hasBin: true
-    dev: false
