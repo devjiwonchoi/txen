@@ -3,11 +3,16 @@
   "version": "0.0.0",
   "type": "module",
   "license": "MIT",
+  "bin": {
+    "txen": "./dist/index.js",
+    "xn": "./dist/index.js"
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "build-cli": "bunchee",
     "init-edgeql": "npx @edgedb/generate edgeql-js",
     "test-embed": "NODE_ENV=test pnpm embed",
     "embed": "dotenv -e .env.local -- tsx ./src/scripts/generate-embeddings.ts"
@@ -18,6 +23,7 @@
     "@types/react": "^18.3.1",
     "@types/react-dom": "^18.3.0",
     "ai": "^3.1.0",
+    "bunchee": "^5.1.5",
     "common-tags": "^1.8.2",
     "dotenv-cli": "^7.4.1",
     "edgedb": "^1.5.4",
@@ -35,5 +41,8 @@
     "tsx": "^4.8.2",
     "typescript": "^5.4.5",
     "vercel": "^34.1.7"
+  },
+  "dependencies": {
+    "txen": "file:txen-0.0.0.tgz"
   }
 }
