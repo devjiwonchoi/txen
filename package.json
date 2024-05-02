@@ -41,8 +41,5 @@
     "tsx": "^4.8.2",
     "typescript": "^5.4.5",
     "vercel": "^34.1.7"
-  },
-  "dependencies": {
-    "txen": "file:txen-0.0.0.tgz"
   }
 }
