@@ -17,6 +17,9 @@
     "test-embed": "NODE_ENV=test pnpm embed",
     "embed": "dotenv -e .env.local -- tsx ./src/scripts/generate-embeddings.ts"
   },
+  "dependencies": {
+    "arg": "^5.0.2"
+  },
   "devDependencies": {
     "@types/common-tags": "^1.8.4",
     "@types/node": "^20.12.7",
