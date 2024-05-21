@@ -3,37 +3,27 @@
   "version": "0.0.0",
   "type": "module",
   "license": "MIT",
+  "bin": "./dist/index.js",
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint",
+    "build:cli": "bunchee",
     "init-edgeql": "npx @edgedb/generate edgeql-js",
     "test-embed": "NODE_ENV=test pnpm embed",
-    "embed": "dotenv -e .env.local -- tsx ./src/scripts/generate-embeddings.ts"
+    "embed": "tsx ./src/scripts/generate-embeddings.ts"
+  },
+  "dependencies": {
+    "@ai-sdk/openai": "^0.0.13",
+    "ai": "^3.1.12",
+    "dotenv": "^16.4.5"
   },
   "devDependencies": {
     "@types/common-tags": "^1.8.4",
-    "@types/node": "^20.12.7",
-    "@types/react": "^18.3.1",
-    "@types/react-dom": "^18.3.0",
-    "ai": "^3.1.0",
+    "@types/node": "^20.12.12",
+    "bunchee": "^5.1.5",
     "common-tags": "^1.8.2",
-    "dotenv-cli": "^7.4.1",
-    "edgedb": "^1.5.4",
-    "eslint": "^8.57.0",
-    "eslint-config-next": "14.2.3",
+    "edgedb": "^1.5.6",
     "gpt-tokenizer": "^2.1.2",
-    "next": "14.2.3",
-    "next-auth": "5.0.0-beta.17",
-    "openai": "^4.40.0",
-    "postcss": "^8.4.38",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1",
     "sse.js": "^2.4.1",
-    "tailwindcss": "^3.4.3",
-    "tsx": "^4.8.2",
-    "typescript": "^5.4.5",
-    "vercel": "^34.1.7"
+    "tsx": "^4.10.5",
+    "typescript": "^5.4.5"
   }
 }
