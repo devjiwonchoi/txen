@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 import 'dotenv/config'
 import { openai } from '@ai-sdk/openai'
 import { streamText } from 'ai'
