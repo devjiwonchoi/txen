@@ -1,18 +1,16 @@
-#!/usr/bin/env node
-import arg from 'arg'
+import 'dotenv/config'
+import { openai } from '@ai-sdk/openai'
+import { streamText } from 'ai'
 
-const args = arg({
-  // Types
-  '--help': Boolean,
-  '--version': Boolean,
-  '--verbose': arg.COUNT, // Counts the number of times --verbose is passed
-  '--port': Number, // --port <number> or --port=<number>
-  '--name': String, // --name <string> or --name=<string>
-  '--tag': [String], // --tag <string> or --tag=<string>
+async function main() {
+  const result = await streamText({
+    model: openai('gpt-3.5-turbo'),
+    prompt: 'Hello, world!',
+  })
 
-  // Aliases
-  '-v': '--verbose',
-  '-n': '--name', // -n <string>; result is stored in --name
-  '--label': '--name', // --label <string> or --label=<string>;
-  //     result is stored in --name
-})
+  for await (const chunk of result.textStream) {
+    process.stdout.write(chunk)
+  }
+}
+
+main().catch(console.error)
