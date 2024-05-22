@@ -3,9 +3,8 @@ import prompts from 'prompts'
 import { existsSync } from 'node:fs'
 import { readFile, writeFile } from 'node:fs/promises'
 import { join } from 'node:path'
-import { openai } from '@ai-sdk/openai'
-import { streamText } from 'ai'
 import { Command } from 'commander'
+import { ask } from '../cli/ask'
 import { description, name, version } from '../../package.json'
 import 'dotenv/config'
 
@@ -20,25 +19,5 @@ program
   .action(async (question) => {
     await ask(question)
   })
-
-async function ask(prompt: string) {
-  if (!prompt) {
-    const { question } = await prompts({
-      type: 'text',
-      name: 'question',
-      message: 'Ask a question',
-    })
-    prompt = question
-  }
-
-  const result = await streamText({
-    model: openai('gpt-3.5-turbo'),
-    prompt,
-  })
-
-  for await (const chunk of result.textStream) {
-    process.stdout.write(chunk)
-  }
-}
 
 program.parse()
