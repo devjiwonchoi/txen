@@ -1,21 +1,18 @@
 import edgeql from 'dbschema/edgeql-js'
 import { stripIndents, oneLineTrim } from 'common-tags'
 import { createHttpClient } from 'edgedb'
-import { auth } from '@/utils/auth'
-import { errors } from '@/utils/constants'
-import { initOpenAI } from '@/utils/openai'
 
 const openai = initOpenAI()
 const edgedbClient = createHttpClient()
 
-export const POST = auth(async function POST(req: Request) {
+export async function POST(req: Request) {
   try {
     const { query } = (await req.json()) as { query: string }
     const sanitizedQuery = query.trim()
 
     const flagged = await isQueryFlagged(query)
 
-    if (flagged) throw new Error(errors.flagged)
+    if (flagged) throw new Error('Query is flagged for moderation')
 
     const embedding = await getEmbedding(query)
 
