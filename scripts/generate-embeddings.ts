@@ -1,4 +1,4 @@
-import e from 'dbschema/edgeql-js'
+import e from '../dbschema/edgeql-js'
 import { join } from 'path'
 import { readdir, readFile } from 'fs/promises'
 import { openai } from '@ai-sdk/openai'

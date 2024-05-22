@@ -6,7 +6,7 @@
   "license": "MIT",
   "bin": "./dist/index.js",
   "scripts": {
-    "build:cli": "bunchee",
+    "build": "bunchee",
     "init-edgeql": "npx @edgedb/generate edgeql-js",
     "test-embed": "NODE_ENV=test pnpm embed",
     "embed": "tsx ./scripts/generate-embeddings.ts"
