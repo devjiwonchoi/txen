@@ -1,10 +1,9 @@
 #!/usr/bin/env node
 import { Command } from 'commander'
 import { description, name, version } from 'package.json'
-import { initOpenAI } from '@/init-openai'
+import { initOpenAI, setApiKey } from '@/ai'
 import { ask } from '@/cli/ask'
 import 'dotenv/config'
-import { setApiKey } from '@/set-api-key'
 
 const program = new Command()
 
@@ -12,7 +11,7 @@ program.name(name).version(version).description(description)
 
 program
   .command('ask')
-  .description('Ask a question')
+  .description('ask any question about nextjs')
   .argument('[question]')
   .action(async (prompt: string) => {
     const openai = await initOpenAI(process.env.OPENAI_API_KEY)
@@ -24,7 +23,7 @@ program
 
 program
   .command('config')
-  .description('Modify OpenAI API key')
+  .description('modify openai api key')
   .argument('[apiKey]')
   .action(async (apiKey?: string) => {
     await setApiKey(apiKey)
