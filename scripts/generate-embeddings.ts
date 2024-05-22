@@ -1,9 +1,11 @@
 import e from 'dbschema/edgeql-js'
 import { join } from 'path'
 import { readdir, readFile } from 'fs/promises'
+import { openai } from '@ai-sdk/openai'
+import { embedMany } from 'ai'
 import { createClient as createEdgeDB } from 'edgedb'
 import { encode } from 'gpt-tokenizer'
-import { initOpenAI } from '@/utils/openai'
+import 'dotenv/config'
 
 type Section = {
   id?: string
@@ -11,8 +13,6 @@ type Section = {
   content: string
   embedding: number[]
 }
-
-const openai = initOpenAI()
 
 function splitContentByHeadings(content: string): string[] {
   const headings = content.match(/^#+\s.+/gm)
@@ -53,15 +53,15 @@ async function getSections(entries: string[]): Promise<Section[]> {
     process.exit(0)
   }
 
-  const embeddingResponse = await openai.embeddings.create({
-    model: 'text-embedding-ada-002',
-    input: contents,
+  const { embeddings } = await embedMany({
+    model: openai.embedding('text-embedding-ada-002'),
+    values: contents,
   })
 
-  embeddingResponse.data.forEach((item, i) => {
+  embeddings.forEach((embedding, i) => {
     const section = sections[i]
     if (!section) return
-    section.embedding = item.embedding
+    section.embedding = embedding
   })
 
   return sections
