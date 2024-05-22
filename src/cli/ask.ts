@@ -1,8 +1,14 @@
+import type { OpenAIProvider } from '@ai-sdk/openai'
 import prompts from 'prompts'
-import { openai } from '@ai-sdk/openai'
 import { streamText } from 'ai'
 
-export async function ask(prompt: string) {
+export async function ask({
+  openai,
+  prompt,
+}: {
+  openai: OpenAIProvider
+  prompt: string
+}) {
   if (!prompt) {
     const { question } = await prompts({
       type: 'text',
