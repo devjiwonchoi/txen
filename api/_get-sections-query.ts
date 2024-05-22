@@ -1,4 +1,4 @@
-import edgeql from '../dbschema/edgeql-js'
+import edgeql from 'dbschema/edgeql-js'
 
 export const getSectionsQuery = edgeql.params(
   {

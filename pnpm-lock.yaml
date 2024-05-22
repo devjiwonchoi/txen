@@ -41,9 +41,6 @@ devDependencies:
   prompts:
     specifier: ^2.4.2
     version: 2.4.2
-  sse.js:
-    specifier: ^2.4.1
-    version: 2.4.1
   tsx:
     specifier: ^4.10.5
     version: 4.10.5
@@ -2976,10 +2973,6 @@ packages:
   /source-map@0.6.1:
     resolution: {integrity: sha512-UjgapumWlbMhkBgzT7Ykc5YXUT46F0iKu8SGXq0bcwP5dz/h0Plj6enJqjz1Zbq2l5WaqYnrVbwWOWMyF3F47g==}
     engines: {node: '>=0.10.0'}
-    dev: true
-
-  /sse.js@2.4.1:
-    resolution: {integrity: sha512-0qXPFZCClp+RPWtldNTYUjDWDlStZq1nyRF7at8WDFotHEyCivEBlR7Z5ftcJnt9KpouRg+NdzGFvPTB2gHl8Q==}
     dev: true
 
   /sswr@2.0.0(svelte@4.2.17):
