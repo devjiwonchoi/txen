@@ -1,3 +1,4 @@
+import type { Section } from '../src/types'
 import e from '../dbschema/edgeql-js'
 import { join } from 'path'
 import { readdir, readFile } from 'fs/promises'
@@ -6,13 +7,6 @@ import { embedMany } from 'ai'
 import { createClient as createEdgeDB } from 'edgedb'
 import { encode } from 'gpt-tokenizer'
 import 'dotenv/config'
-
-type Section = {
-  id?: string
-  tokens: number
-  content: string
-  embedding: number[]
-}
 
 function splitContentByHeadings(content: string): string[] {
   const headings = content.match(/^#+\s.+/gm)

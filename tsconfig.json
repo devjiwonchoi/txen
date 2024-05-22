@@ -1,31 +1,24 @@
 {
   "compilerOptions": {
-    // Base Options recommended for all projects
-    "esModuleInterop": true,
-    "skipLibCheck": true,
-    "target": "es2022",
+    "strict": true,
+    "noEmit": true,
     "allowJs": true,
-    "resolveJsonModule": true,
-    "moduleDetection": "force",
+    "incremental": true,
+    "skipLibCheck": true,
     "isolatedModules": true,
     "verbatimModuleSyntax": true,
-    // Enable strict type checking so you can catch bugs early
-    "strict": true,
     "noUncheckedIndexedAccess": true,
-    "noImplicitOverride": true,
-    // We are not transpiling, so preserve our source code and do not emit files
+    "target": "esnext",
     "module": "preserve",
-    "noEmit": true,
+    "jsx": "preserve",
     "lib": [
-      "es2022"
-    ]
+      "esnext"
+    ],
   },
-  // Include the necessary files for your project
   "include": [
     "**/*.ts",
   ],
   "exclude": [
-    "node_modules",
-    "dbschema"
+    "node_modules"
   ]
 }
