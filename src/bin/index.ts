@@ -4,6 +4,7 @@ import { description, name, version } from 'package.json'
 import { initOpenAI } from '@/init-openai'
 import { ask } from '@/cli/ask'
 import 'dotenv/config'
+import { setApiKey } from '@/set-api-key'
 
 const program = new Command()
 
@@ -19,6 +20,14 @@ program
       openai,
       prompt,
     })
+  })
+
+program
+  .command('config')
+  .description('Modify OpenAI API key')
+  .argument('[apiKey]')
+  .action(async (apiKey?: string) => {
+    await setApiKey(apiKey)
   })
 
 program.parse()
