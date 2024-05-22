@@ -1,9 +1,6 @@
 import type { OpenAIProvider } from '@ai-sdk/openai'
 import { embed } from 'ai'
-import { createHttpClient } from 'edgedb'
-import { getSectionsQuery } from './get-sections-query'
-
-const edgedb = createHttpClient()
+import { getSections } from './get-sections'
 
 export async function getContext({
   openai,
@@ -17,12 +14,7 @@ export async function getContext({
     value: query,
   })
 
-  const sections = await getSectionsQuery.run(edgedb, {
-    target: embedding,
-    matchThreshold: 0.3,
-    matchCount: 8,
-    minContentLength: 20,
-  })
+  const sections = await getSections(embedding)
 
   let tokenCount = 0
   let context = ''

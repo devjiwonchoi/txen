@@ -1,8 +1,8 @@
 import type { OpenAIProvider } from '@ai-sdk/openai'
 import prompts from 'prompts'
 import { streamText } from 'ai'
-import { getContext } from '@/ai/get-context'
-import { resolvePrompt } from '@/ai/resolve-prompt'
+import { getContext } from '../ai/get-context'
+import { resolvePrompt } from '../ai/resolve-prompt'
 
 export async function ask({
   openai,
