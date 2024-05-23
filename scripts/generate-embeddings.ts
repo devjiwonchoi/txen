@@ -77,7 +77,6 @@ async function storeEmbeddings() {
   console.log(`Discovered ${entries.length} entries`)
   const sections = await getSections(entries)
 
-  // Delete old data from the DB.
   // TODO: do not delete all data, use checksum
   await e.delete(e.Section).run(edgedb)
   console.log('Deleted old data')

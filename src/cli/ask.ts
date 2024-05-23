@@ -3,6 +3,7 @@ import prompts from 'prompts'
 import { streamText } from 'ai'
 import { getContext } from '../ai/get-context'
 import { resolvePrompt } from '../ai/resolve-prompt'
+import { formatMarkdown } from 'src/utils'
 
 export async function ask({
   openai,
@@ -15,7 +16,7 @@ export async function ask({
     const { question } = await prompts({
       type: 'text',
       name: 'question',
-      message: 'Ask a question',
+      message: 'Ask anything about Next.js',
     })
     prompt = question
   }
@@ -28,11 +29,21 @@ export async function ask({
   const resolvedPrompt = resolvePrompt(prompt, context)
 
   const result = await streamText({
-    model: openai('gpt-3.5-turbo'),
+    model: openai('gpt-4o'),
     prompt: resolvedPrompt,
   })
 
+  let fullText = ''
+
   for await (const chunk of result.textStream) {
     process.stdout.write(chunk)
+    fullText += chunk
   }
+
+  // Clear the screen
+  process.stdout.write('\x1b[2J')
+  process.stdout.write('\x1b[H')
+
+  const formattedFullText = await formatMarkdown(fullText)
+  process.stdout.write(formattedFullText)
 }
