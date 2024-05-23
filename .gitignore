@@ -2,3 +2,4 @@
 /dbschema/edgeql-js/
 /dist/
 .env*
+dbschema/edgeql-js
