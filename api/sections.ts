@@ -3,7 +3,7 @@ import { join } from 'node:path'
 import { createHttpClient } from 'edgedb'
 
 const { getSectionsQuery } = await import(
-  join(process.cwd() + 'get-sections-query.js')
+  join(process.cwd(), '/get-sections-query.js')
 )
 
 export async function POST(request: Request) {
