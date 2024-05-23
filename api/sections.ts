@@ -1,6 +1,6 @@
 import type { Embedding } from 'ai'
 import { createHttpClient } from 'edgedb'
-import edgeql from '../dbschema/edgeql-js'
+import edgeql from '../public/edgeql-js'
 
 export const getSectionsQuery = edgeql.params(
   {
