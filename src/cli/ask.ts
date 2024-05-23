@@ -3,7 +3,7 @@ import prompts from 'prompts'
 import { streamText, embed } from 'ai'
 import { getContext } from '../ai/get-context'
 import { resolvePrompt } from '../ai/resolve-prompt'
-import { formatMarkdown } from 'src/utils'
+import { formatMarkdown } from '../utils'
 
 export async function ask({
   openai,

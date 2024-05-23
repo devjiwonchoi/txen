@@ -1,9 +1,10 @@
 import type { Embedding } from 'ai'
-import type { Section } from 'src/types'
+import type { Section } from '../types'
+import { BASE_URL } from '../constants'
 
 async function fetchSections(embedding: Embedding) {
   try {
-    const response = await fetch('https://txenext.vercel.app/api/sections', {
+    const response = await fetch(`${BASE_URL}/api/sections`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
