@@ -1,28 +1,23 @@
-import type { OpenAIProvider } from '@ai-sdk/openai'
-import { embed } from 'ai'
-import { createHttpClient } from 'edgedb'
-import { getSectionsQuery } from './get-sections-query'
+import type { Embedding } from 'ai'
+import type { Section } from 'src/types'
 
-const edgedb = createHttpClient()
+async function fetchSections(embedding: Embedding) {
+  try {
+    const response = await fetch('https://txenext.vercel.app/api/sections', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ embedding }),
+    })
+    return (await response.json()) as { sections: Section[] }
+  } catch (error) {
+    throw new Error('Failed to fetch sections')
+  }
+}
 
-export async function getContext({
-  openai,
-  query,
-}: {
-  openai: OpenAIProvider
-  query: string
-}) {
-  const { embedding } = await embed({
-    model: openai.embedding('text-embedding-3-small'),
-    value: query,
-  })
-
-  const sections = await getSectionsQuery.run(edgedb, {
-    target: embedding,
-    matchThreshold: 0.3,
-    matchCount: 8,
-    minContentLength: 20,
-  })
+export async function getContext(embedding: Embedding) {
+  const { sections } = await fetchSections(embedding)
 
   let tokenCount = 0
   let context = ''
