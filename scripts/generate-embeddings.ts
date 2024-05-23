@@ -6,7 +6,6 @@ import { openai } from '@ai-sdk/openai'
 import { embedMany } from 'ai'
 import { createClient as createEdgeDB } from 'edgedb'
 import { encode } from 'gpt-tokenizer'
-import 'dotenv/config'
 
 function splitContentByHeadings(content: string): string[] {
   const headings = content.match(/^#+\s.+/gm)

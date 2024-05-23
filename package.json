@@ -2,28 +2,32 @@
   "name": "txen",
   "version": "0.0.0",
   "description": "Next.js AI Helper CLI",
-  "type": "module",
   "license": "MIT",
   "bin": "./dist/index.js",
   "scripts": {
-    "build:cli": "bunchee",
+    "dev": "dotenv -- tsx ./src/bin/index.ts",
+    "build": "bunchee",
+    "start": "dotenv -- node ./dist/index.js",
     "prebuild": "npx @edgedb/generate edgeql-js",
     "test-embed": "NODE_ENV=test pnpm embed",
-    "embed": "tsx ./scripts/generate-embeddings.ts"
+    "embed": "dotenv -- tsx ./scripts/generate-embeddings.ts",
+    "prepublishOnly": "pnpm build -m"
+  },
+  "dependencies": {
+    "@ai-sdk/openai": "^0.0.13",
+    "ai": "^3.1.12",
+    "commander": "^12.1.0",
+    "common-tags": "^1.8.2",
+    "edgedb": "^1.5.7",
+    "prompts": "^2.4.2"
   },
   "devDependencies": {
-    "@ai-sdk/openai": "^0.0.13",
     "@types/common-tags": "^1.8.4",
     "@types/node": "^20.12.12",
     "@types/prompts": "^2.4.9",
-    "ai": "^3.1.12",
     "bunchee": "^5.1.5",
-    "commander": "^12.1.0",
-    "common-tags": "^1.8.2",
-    "dotenv": "^16.4.5",
-    "edgedb": "^1.5.6",
+    "dotenv-cli": "^7.4.2",
     "gpt-tokenizer": "^2.1.2",
-    "prompts": "^2.4.2",
     "tsx": "^4.10.5",
     "typescript": "^5.4.5",
     "vercel": "^34.2.0"

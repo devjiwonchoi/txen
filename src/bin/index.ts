@@ -4,7 +4,6 @@ import { initOpenAI } from '../ai/init-openai'
 import { setApiKey } from '../ai/set-api-key'
 import { ask } from '../cli/ask'
 import { description, name, version } from '../../package.json'
-import 'dotenv/config'
 
 const program = new Command()
 
