@@ -1,9 +1,9 @@
 import type { OpenAIProvider } from '@ai-sdk/openai'
 import prompts from 'prompts'
-import { streamText } from 'ai'
+import { streamText, embed } from 'ai'
 import { getContext } from '../ai/get-context'
 import { resolvePrompt } from '../ai/resolve-prompt'
-import { formatMarkdown } from 'src/utils'
+import { formatMarkdown } from '../utils'
 
 export async function ask({
   openai,
@@ -21,11 +21,12 @@ export async function ask({
     prompt = question
   }
 
-  const context = await getContext({
-    openai,
-    query: prompt,
+  const { embedding } = await embed({
+    model: openai.embedding('text-embedding-3-small'),
+    value: prompt,
   })
 
+  const context = await getContext(embedding)
   const resolvedPrompt = resolvePrompt(prompt, context)
 
   const result = await streamText({
