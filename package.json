@@ -8,7 +8,7 @@
     "dev:cli": "dotenv -- tsx ./src/bin/index.ts",
     "build:cli": "bunchee",
     "start:cli": "dotenv -- node ./dist/index.js",
-
+    "prebuild": "npx @edgedb/generate edgeql-js",
     "test-embed": "NODE_ENV=test pnpm embed",
     "embed": "dotenv -- tsx ./scripts/generate-embeddings.ts",
     "prepublishOnly": "pnpm build:cli -m"
