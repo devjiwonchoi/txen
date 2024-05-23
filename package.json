@@ -8,7 +8,7 @@
     "dev:cli": "dotenv -- tsx ./src/bin/index.ts",
     "build:cli": "bunchee",
     "start:cli": "dotenv -- node ./dist/index.js",
-    "build": "npx @edgedb/generate edgeql-js",
+    "prebuild": "npx @edgedb/generate edgeql-js",
     "test-embed": "NODE_ENV=test pnpm embed",
     "embed": "dotenv -- tsx ./scripts/generate-embeddings.ts",
     "prepublishOnly": "pnpm build -m"
@@ -18,7 +18,6 @@
     "ai": "^3.1.12",
     "commander": "^12.1.0",
     "common-tags": "^1.8.2",
-    "edgedb": "^1.5.7",
     "marked": "^12.0.2",
     "marked-terminal": "^7.0.0",
     "prompts": "^2.4.2"
@@ -30,6 +29,7 @@
     "@types/prompts": "^2.4.9",
     "bunchee": "^5.1.5",
     "dotenv-cli": "^7.4.2",
+    "edgedb": "^1.5.7",
     "gpt-tokenizer": "^2.1.2",
     "tsx": "^4.10.5",
     "typescript": "^5.4.5",
