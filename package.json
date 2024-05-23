@@ -11,7 +11,7 @@
     "start": "dotenv -- node ./dist/index.js",
     "test-embed": "NODE_ENV=test pnpm embed",
     "embed": "dotenv -- tsx ./scripts/generate-embeddings.ts",
-    "init-edgedb": "npx @edgedb/generate edgeql-js",
+    "init-edgedb": "npx @edgedb/generate edgeql-js --out ./public/edgeql-js",
     "prepublishOnly": "pnpm build:cli -m"
   },
   "dependencies": {

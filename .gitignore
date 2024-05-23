@@ -1,5 +1,7 @@
 /node_modules/
-/dbschema/edgeql-js/
 /dist/
 .env*
+
+# edgeql-js
 dbschema/edgeql-js
+public/edgeql-js

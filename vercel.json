@@ -1,5 +1,4 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "buildCommand": "pnpm init-edgedb",
-  "outputDirectory": "dbschema"
+  "buildCommand": "pnpm init-edgedb"
 }
