@@ -1,6 +1,10 @@
 import type { Embedding } from 'ai'
+import { join } from 'node:path'
 import { createHttpClient } from 'edgedb'
-import { getSectionsQuery } from '../dist/get-sections-query'
+
+const { getSectionsQuery } = await import(
+  join(process.cwd() + 'get-sections-query.js')
+)
 
 export async function POST(request: Request) {
   try {
