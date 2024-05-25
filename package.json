@@ -8,7 +8,7 @@
   "scripts": {
     "dev": "dotenv -- tsx ./src/bin/index.ts",
     "build:cli": "bunchee",
-    "build": "pnpm init-edgedb && bunchee ./src/ai/get-sections-query.ts -o ./public/get-sections-query.js",
+    "build": "pnpm init-edgedb",
     "start": "dotenv -- node ./dist/index.js",
     "test-embed": "NODE_ENV=test pnpm embed",
     "embed": "dotenv -- tsx ./scripts/generate-embeddings.ts",
